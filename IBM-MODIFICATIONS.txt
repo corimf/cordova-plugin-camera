@@ -1,3 +1,15 @@
+RTC: 43945 - In Android 4.4 no videos in the gallery are available at all
+
+- RTC work item number: 43945
+- Apache Cordova Jira issue: https://issues.apache.org/jira/browse/CB-5398
+- Markmail or Google Group reference:
+- Product PMR: APAR: 42806
+- Description: Revert the workaround for image picker problem with content:// URI's
+and the inability to act with StorageAccessFramework. The workaround only shows image
+files when using the Gallery but should also show videos. This is accomplished by
+just backporting to cordova-android the fix to use StorageAccessFramework correctly. 
+
+
 RTC: 31533 - Backport CB-5398 (image picker) to 3.1 ESR
 
 Workaround image picker issue with content:// URIs
