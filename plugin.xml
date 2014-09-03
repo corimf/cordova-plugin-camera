@@ -66,6 +66,11 @@
  	     <framework src="CoreGraphics.framework" />
  	     <framework src="AssetsLibrary.framework" />
          <framework src="MobileCoreServices.framework" />
+         
+         <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+             <string></string>
+         </config-file>
+
      </platform>
 
     <!-- blackberry10 -->
