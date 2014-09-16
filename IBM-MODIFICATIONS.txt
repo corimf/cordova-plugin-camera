@@ -12,3 +12,16 @@ Geolocation plugin, the issue requires the change above plus a change to the
 CDVLocation.m file in the plugin. The iOS8 SDK changed the API for requesting
 permission to access location. Therefore, changes had to be made on the
 native side to account for that.
+
+Pressing back button when selecing image causes app crash
+- Cordova RTC work item number: 51608
+- Apache Cordova Jira issue: 
+- Markmail / Google Group / StackOverflow reference:
+- IBM PMR: (found before shipped)
+- Worklight RTC work item number: 51125
+- Full description: Pressing the back button when the image selection dialog
+is active causes the application to crash on some Samsung devices. This is due
+to the intent returning null on these devices. The fix was backported from 
+this commit in cordova-plugin-camera: 5b8324e9 This was discovered in Cordova 3.1.0esr
+so we are fixing this subsequent version as well. Cordova 3.6.0esr will be fine
+since the plugin version has been updated in that stream. 
