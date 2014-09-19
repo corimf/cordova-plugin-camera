@@ -52,4 +52,4 @@ Pressing back button when selecing image causes app crash
 - Full description: Pressing the back button when the image selection dialog
 is active causes the application to crash on some Samsung devices. This is due
 to the intent returning null on these devices. The fix was backported from 
-this commit in cordova-plugin-camera: 5b8324e9
+this commit in cordova-plugin-camera: 5b8324e9 and a tiny subset of d899d7a4

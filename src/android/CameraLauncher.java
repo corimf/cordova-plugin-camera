@@ -395,7 +395,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         else if ((srcType == PHOTOLIBRARY) || (srcType == SAVEDPHOTOALBUM)) {
             if (resultCode == Activity.RESULT_OK && intent != null) {
                 Uri uri = intent.getData();
-
+                if (uri == null) {
+                    this.failPicture("null data from photo library");
+                    return;
+                }
                 // If you ask for video or all media type you will automatically get back a file URI
                 // and there will be no attempt to resize any returned data
                 if (this.mediaType != PICTURE) {
