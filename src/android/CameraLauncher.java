@@ -400,6 +400,11 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      */
     private void processResultFromGallery(int destType, Intent intent) {
         Uri uri = intent.getData();
+        if (uri == null) {
+            this.failPicture("null data from photo library");
+            return;
+        }
+
         int rotate = 0;
 
         // If you ask for video or all media type you will automatically get back a file URI
