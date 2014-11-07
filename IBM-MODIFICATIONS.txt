@@ -53,3 +53,10 @@ Pressing back button when selecing image causes app crash
 is active causes the application to crash on some Samsung devices. This is due
 to the intent returning null on these devices. The fix was backported from 
 this commit in cordova-plugin-camera: 5b8324e9 and a tiny subset of d899d7a4
+
+Cordova iOS 64-bit support
+- Cordova RTC work item number: 55592
+- Worklight RTC work item number: 55901
+- Apache Cordova Jira issue: CB-6212
+- Markmail or Google Group reference: none
+- Fix plugin warnings compiled under arm64 64-bit
