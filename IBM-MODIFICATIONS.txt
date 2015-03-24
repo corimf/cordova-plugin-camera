@@ -1,3 +1,18 @@
+Fix cropping large images for Android that causes app to close on Nexus devices
+
+- Cordova RTC work item number: 68891
+- Apache Cordova Jira issue:
+- Markmail / Google Group / StackOverflow reference:
+- IBM PMR: 16264,082,000
+- Worklight RTC work item number: (APAR) 68228
+- Full description: The problem is trying to crop with a large image. 
+  The app will close with an exception of exceeding the transaction binder limit.  
+  The problem only occurs on Nexus devices. The crop intent would return the whole 
+  bitmap image which was too big and caused an exception for exceeding the binder 
+  transaction size and thus causing the activity to close. The solution was to pass 
+  in the uri to crop instead which is what is done in later versions. In 
+  CameraLauncher.java, the cropping was changed to receiving the uri of the image.
+
 Fix geolocation for iOS 8
 
 - Cordova RTC work item number: 51254
