@@ -60,3 +60,9 @@ Cordova iOS 64-bit support
 - Apache Cordova Jira issue: CB-6212
 - Markmail or Google Group reference: none
 - Fix plugin warnings compiled under arm64 64-bit
+
+Fix memory leak in navigator.camera.getPicture()
+- Cordova RTC work item number: 64615
+- Worklight RTC work item number: 69057
+- IBM PMR: 64152,024,677
+- Full description: A memory leak was observed when using camera.getPicture() multiple times. I cherry-picked commit d6f7f45 to fix camera issues, cropping, memory leaks from 3.4.
