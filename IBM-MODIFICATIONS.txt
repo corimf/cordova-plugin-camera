@@ -1,3 +1,13 @@
+Fix camera plugin on Windows 8 not returning native URL
+
+- Apache Cordova Jira issue: https://issues.apache.org/jira/browse/CB-8498
+- Markmail / Google Group / StackOverflow reference:
+- IBM PMR: 44843,499,000
+- Worklight RTC work item number: APAR PI43177 / RTC 77799
+- Full description: When capturing an image using source other than camera, a blob object URL
+  is returned. In order to fix it, when this scenario happens it should verify what kind of 
+  destination is handled, in order to return an URI or a Blob URL object.
+
 Fix cropping large images for Android that causes app to close on Nexus devices
 
 - Cordova RTC work item number: 68891
