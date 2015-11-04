@@ -143,7 +143,7 @@ module.exports = {
 
             fileOpenPicker.pickSingleFileAsync().then(function (file) {
                 if (file) {
-                    if (destinationType == Camera.DestinationType.FILE_URI) {
+                    if (destinationType == Camera.DestinationType.FILE_URI || destinationType == Camera.DestinationType.NATIVE_URI) { 
                         if (targetHeight > 0 && targetWidth > 0) {
                             resizeImage(file);
                         }
