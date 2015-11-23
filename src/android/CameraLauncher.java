@@ -379,7 +379,16 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             }
 
             this.processPicture(bitmap);
-            checkForDuplicateImage(DATA_URL);
+
+            if (this.saveToPhotoAlbum) {
+                Uri inputUri = getUriFromMediaStore();
+                uri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
+
+                writeUncompressedImage(uri);
+            }
+            else {
+                checkForDuplicateImage(DATA_URL);
+            }
         }
 
         // If sending filename back
