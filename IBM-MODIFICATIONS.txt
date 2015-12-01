@@ -1,3 +1,12 @@
+CAMERA SHOWS BLACK SCREEN WHEN APP IS NOT AUTHORIZED TO USE CAMERA
+
+- Apache Cordova Jira issue: CB-7667
+- Markmail / Google Group / StackOverflow reference:
+- IBM PMR: 75991,082,000
+- Cherry Pick: 9f9e5ef4a9c5cf2a829e220ee627e7efc8110cd6
+- Worklight RTC work item number: APAR 94636
+- Full description: When bringing up the camera on an app that is not authorized to use the camera, the user will only see a black screen with no message or indication that it is not authorized
+
 Camera plugin using DATA_URL does not save images to gallery for Android 
 
 - Apache Cordova Jira issue: 
