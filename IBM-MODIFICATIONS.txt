@@ -1,3 +1,16 @@
+Fix rotated image when using DATA_URL for Android
+
+- Apache Cordova Jira issue: 
+- Markmail / Google Group / StackOverflow reference:
+- IBM PMR: 75991,082,000
+- Cherry Pick: 
+- Worklight RTC work item number: APAR PI53212 / RTC 94943
+- Full description: Saved images using the DATA_URL option in Android
+devices are always saved in landscape orientation. If taking a picture 
+in portrait orientation, the saved image will be rotated by 90 degrees. 
+The solution is to change the write image function to write the bitmap 
+with the correct orientation instead of the uncompressed image. 
+
 CAMERA SHOWS BLACK SCREEN WHEN APP IS NOT AUTHORIZED TO USE CAMERA
 
 - Apache Cordova Jira issue: CB-7667
