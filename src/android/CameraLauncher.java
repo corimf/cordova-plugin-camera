@@ -380,7 +380,18 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 Uri inputUri = getUriFromMediaStore();
                 uri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
 
-                writeUncompressedImage(uri);
+                // Add compressed version of captured image to returned media store Uri
+                OutputStream os = this.cordova.getActivity().getContentResolver().openOutputStream(uri);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, this.mQuality, os);
+                os.close();
+
+                // Restore exif data to file
+                if (this.encodingType == JPEG) {
+                    String exifPath;
+                    exifPath = FileHelper.getRealPath(uri, this.cordova);
+                    exif.createOutFile(exifPath);
+                    exif.writeExifData();
+                }
             }
             else {
                 checkForDuplicateImage(DATA_URL);
