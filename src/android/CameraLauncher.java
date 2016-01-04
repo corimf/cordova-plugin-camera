@@ -108,12 +108,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private Uri scanMe;                     // Uri of image to be added to content store
     private Uri croppedUri;
 
-
-    protected void getReadPermission(int requestCode)
-    {
-        cordova.requestPermission(this, requestCode, Manifest.permission.READ_EXTERNAL_STORAGE);
-    }
-
     /**
      * Executes the request and returns PluginResult.
      *
@@ -161,7 +155,15 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     this.callTakePicture(destType, encodingType);
                 }
                 else if ((this.srcType == PHOTOLIBRARY) || (this.srcType == SAVEDPHOTOALBUM)) {
-                    this.getImage(this.srcType, destType, encodingType);
+                    // Any options that edit the file require READ permissions in order to try and
+                    // preserve the original exif data and filename in the modified file that is
+                    // created
+                    if(this.mediaType == PICTURE && (this.destType == FILE_URI || this.destType == NATIVE_URI)
+                            && fileWillBeModified() && !PermissionHelper.hasPermission(this, permissions[0])) {
+                        PermissionHelper.requestPermission(this, SAVE_TO_ALBUM_SEC, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    } else {
+                        this.getImage(this.srcType, destType, encodingType);
+                    }
                 }
             }
             catch (IllegalArgumentException e)
@@ -218,10 +220,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      * @param returnType        Set the type of image to return.
      */
     public void callTakePicture(int returnType, int encodingType) {
-        if (cordova.hasPermission(permissions[0])) {
+        if (PermissionHelper.hasPermission(this, permissions[0])) {
             takePicture(returnType, encodingType);
         } else {
-            getReadPermission(TAKE_PIC_SEC);
+            PermissionHelper.requestPermission(this, TAKE_PIC_SEC, Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
 

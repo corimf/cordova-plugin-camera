@@ -50,8 +50,8 @@
             <feature name="Camera">
                 <param name="firefoxos-package" value="Camera" />
             </feature>
-        </config-file>                                         
-        
+        </config-file>
+
         <js-module src="src/firefoxos/CameraProxy.js" name="CameraProxy">
           <runs />
         </js-module>
@@ -71,6 +71,7 @@
         <source-file src="src/android/CameraLauncher.java" target-dir="src/org/apache/cordova/camera" />
         <source-file src="src/android/FileHelper.java" target-dir="src/org/apache/cordova/camera" />
         <source-file src="src/android/ExifHelper.java" target-dir="src/org/apache/cordova/camera" />
+        <source-file src="src/android/PermissionHelper.java" target-dir="src/org/apache/cordova/camera" />
 
         <js-module src="www/CameraPopoverHandle.js" name="CameraPopoverHandle">
             <clobbers target="CameraPopoverHandle" />
@@ -98,7 +99,7 @@
         </js-module>
 
      </platform>
-     
+
      <!-- ubuntu -->
      <platform name="ubuntu">
          <config-file target="config.xml" parent="/*">
@@ -144,11 +145,11 @@
          <framework src="MobileCoreServices.framework" />
          <framework src="CoreGraphics.framework" />
          <framework src="AVFoundation.framework" />
-         
+
          <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
              <string></string>
          </config-file>
-                  
+
      </platform>
 
     <!-- blackberry10 -->
