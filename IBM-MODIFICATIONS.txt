@@ -1,3 +1,16 @@
+Add Android M permission support to Cordova
+- Cordova RTC work item number: 106363
+- Apache Cordova Jira issue: 
+- Markmail or Google Group reference:
+- Product PMR: APAR PI61332 (RTC 106363)
+- Cherry-pick: 8024c5de49888442992f8841740697ae151e1125, cbe17eec213c810695f257a93799a2fb88111def,
+44475d9df98f7e004a529f1e0d8851bf786788a7, 9b444c39ba398cbe2a59892ea980dd264d08eefd,
+1d32ea46f0ebcbf5cbc3d8a255170bf7186533c8, a19c75253a3deb317c670f2737755d7e05cc635f,
+c12206ebc8ec337613e0751970536d692de6f572, 0cd962466d2641fcd05155690e23432db02cc79a,
+- Full description: The Android M permission model will request for permissions at 
+run time. To add this support, Cordova plugins will need to add permission request functions 
+in Android API 23 to handle the run time permissions.
+
 Fix rotated image when using DATA_URL for Android
 
 - Apache Cordova Jira issue: 
