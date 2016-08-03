@@ -29,11 +29,12 @@ import java.io.OutputStream;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaResourceApi;
+import org.apache.cordova.CoreAndroid;
 import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
-import org.apache.mobilespec.BuildConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.apache.cordova.Api24Camera.BuildConfig;
 
 import android.Manifest;
 import android.app.Activity;
@@ -113,6 +114,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private MediaScannerConnection conn;    // Used to update gallery app with newly-written files
     private Uri scanMe;                     // Uri of image to be added to content store
     private Uri croppedUri;
+    private String applicationId;
 
 
     /**
@@ -125,6 +127,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         this.callbackContext = callbackContext;
+        //Adding an API to CoreAndroid to get the BuildConfigValue
+        //This allows us to not make this a breaking change to embedding
+        this.applicationId = (String) CoreAndroid.getBuildConfigValue(cordova.getActivity(), "APPLICATION_ID");
 
         if (action.equals("takePicture")) {
             this.srcType = CAMERA;
@@ -219,8 +224,8 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      * or to display URI in an img tag
      *      img.src=result;
      *
-     * @param quality           Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
      * @param returnType        Set the type of image to return.
+     * @param encodingType           Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
      */
     public void callTakePicture(int returnType, int encodingType) {
         boolean saveAlbumPermission = PermissionHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -271,7 +276,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         // Specify file so that large image is captured and returned
         File photo = createCaptureFile(encodingType);
         this.imageUri = FileProvider.getUriForFile(cordova.getActivity(),
-                BuildConfig.APPLICATION_ID + ".provider",
+                applicationId + ".provider",
                 photo);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
         //We can write to this URI, this will hopefully allow us to write files to get to the next step
@@ -305,7 +310,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     /**
      * Get image from photo library.
      *
-     * @param quality           Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
      * @param srcType           The album to get image from.
      * @param returnType        Set the type of image to return.
      * @param encodingType
@@ -364,32 +368,36 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
    */
   private void performCrop(Uri picUri, int destType) {
     try {
-      Intent cropIntent = new Intent("com.android.camera.action.CROP");
-      // indicate image type and Uri
-      cropIntent.setDataAndType(picUri, "image/*");
-      // set crop properties
-      cropIntent.putExtra("crop", "true");
-      // indicate output X and Y
-      if (targetWidth > 0) {
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        // indicate image type and Uri
+        cropIntent.setDataAndType(picUri, "image/*");
+        // set crop properties
+        cropIntent.putExtra("crop", "true");
+
+
+        // indicate output X and Y
+        if (targetWidth > 0) {
           cropIntent.putExtra("outputX", targetWidth);
-      }
-      if (targetHeight > 0) {
+        }
+        if (targetHeight > 0) {
           cropIntent.putExtra("outputY", targetHeight);
-      }
-      if (targetHeight > 0 && targetWidth > 0 && targetWidth == targetHeight) {
+        }
+        if (targetHeight > 0 && targetWidth > 0 && targetWidth == targetHeight) {
           cropIntent.putExtra("aspectX", 1);
           cropIntent.putExtra("aspectY", 1);
-      }
-      // create new file handle to get full resolution crop
-      croppedUri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
-      cropIntent.putExtra("output", croppedUri);
+        }
+        // create new file handle to get full resolution crop
+        croppedUri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
+        cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        cropIntent.putExtra("output", croppedUri);
 
-      // start the activity - we handle returning in onActivityResult
+        // start the activity - we handle returning in onActivityResult
 
-      if (this.cordova != null) {
-        this.cordova.startActivityForResult((CordovaPlugin) this,
-            cropIntent, CROP_CAMERA + destType);
-      }
+        if (this.cordova != null) {
+            this.cordova.startActivityForResult((CordovaPlugin) this,
+                cropIntent, CROP_CAMERA + destType);
+        }
     } catch (ActivityNotFoundException anfe) {
       Log.e(LOG_TAG, "Crop operation not supported on this device");
       // Send Uri back to JavaScript for viewing image
@@ -722,7 +730,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
                 try {
                     if (this.allowEdit && destType != DATA_URL) {
                         Uri tmpFile = FileProvider.getUriForFile(cordova.getActivity(),
-                                BuildConfig.APPLICATION_ID + ".provider",
+                                applicationId + ".provider",
                                 createCaptureFile(this.encodingType));
                         performCrop(tmpFile, destType);
                     } else {
@@ -813,7 +821,8 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
      * In the special case where the default width, height and quality are unchanged
      * we just write the file out to disk saving the expensive Bitmap.compress function.
      *
-     * @param uri
+     * @param src
+     * @param dest
      * @throws FileNotFoundException
      * @throws IOException
      */
