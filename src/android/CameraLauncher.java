@@ -34,7 +34,6 @@ import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.apache.cordova.Api24Camera.BuildConfig;
 
 import android.Manifest;
 import android.app.Activity;
