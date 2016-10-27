@@ -95,7 +95,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private int mQuality;                   // Compression quality hint (0-100: 0=low quality & high compression, 100=compress of max quality)
     private int targetWidth;                // desired width of the image
     private int targetHeight;               // desired height of the image
-    private Uri imageUri;                   // Uri of captured image
+    private CordovaUri imageUri;            // Uri of captured image
     private int encodingType;               // Type of encoding to use
     private int mediaType;                  // What type of media to retrieve
     private int destType;                   // Source type (needs to be saved for the permission handling)
@@ -275,10 +275,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         // Specify file so that large image is captured and returned
         File photo = createCaptureFile(encodingType);
-        this.imageUri = FileProvider.getUriForFile(cordova.getActivity(),
+        this.imageUri = new CordovaUri(FileProvider.getUriForFile(cordova.getActivity(),
                 applicationId + ".provider",
-                photo);
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, this.imageUri);
+                photo));
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri.getCorrectUri());
         //We can write to this URI, this will hopefully allow us to write files to get to the next step
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -435,7 +435,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
         // If sending base64 image back
         if (destType == DATA_URL) {
-            bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.toString()));
+            bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.getFilePath()));
             if (bitmap == null) {
                 // Try to get the bitmap from intent.
                 bitmap = (Bitmap) intent.getExtras().get("data");
@@ -502,7 +502,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
 
                 this.callbackContext.success(uri.toString());
             } else {
-                bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.toString()));
+                bitmap = getScaledBitmap(FileHelper.stripFileProtocol(imageUri.getFilePath()));
 
                 if (rotate != 0 && this.correctOrientation) {
                     bitmap = getRotatedBitmap(rotate, bitmap, exif);
@@ -537,7 +537,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             throw new IllegalStateException();
         }
 
-        this.cleanup(FILE_URI, this.imageUri, uri, bitmap);
+        this.cleanup(FILE_URI, this.imageUri.getFilePath(), uri, bitmap);
         bitmap = null;
     }
 
@@ -828,7 +828,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
      */
     private void writeUncompressedImage(Uri uri) throws FileNotFoundException,
             IOException {
-        FileInputStream fis = new FileInputStream(FileHelper.stripFileProtocol(imageUri.toString()));
+        FileInputStream fis = new FileInputStream(FileHelper.stripFileProtocol(imageUri.getFilePath()));
         OutputStream os = this.cordova.getActivity().getContentResolver().openOutputStream(uri);
         byte[] buffer = new byte[4096];
         int len;
@@ -1120,8 +1120,8 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         }
     }
 
-/*
- * This is dirty, but it does the job.
+ /*
+  * This is dirty, but it does the job.
   *
   * Since the FilesProvider doesn't really provide you a way of getting a URL from the file,
   * and since we actually need the Camera to create the file for us most of the time, we don't
@@ -1132,7 +1132,6 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
   * we own the context in this case.
  */
 
-
     private String getFileNameFromUri(Uri uri) {
         String fullUri = uri.toString();
         String partial_path = fullUri.split("external_files")[1];
@@ -1141,4 +1140,6 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         return path;
 
     }
+
+
 }
