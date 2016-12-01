@@ -700,7 +700,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         int srcType = (requestCode / 16) - 1;
         int destType = (requestCode % 16) - 1;
         // if camera crop
-    if (requestCode == CROP_CAMERA) {
+    if (requestCode >= CROP_CAMERA) {
       if (resultCode == Activity.RESULT_OK) {
         // Because of the inability to pass through multiple intents, this hack will allow us
         // to pass arcane codes back.

@@ -86,6 +86,9 @@
         <source-file src="src/android/PermissionHelper.java" target-dir="src/org/apache/cordova/camera" />
         <source-file src="src/android/xml/provider_paths.xml" target-dir="res/xml" />
 
+        <!-- from cordova-plugin-compat  -->
+        <source-file src="src/android/BuildHelper.java" target-dir="src/org/apache/cordova" />
+
         <js-module src="www/CameraPopoverHandle.js" name="CameraPopoverHandle">
             <clobbers target="CameraPopoverHandle" />
           </js-module>
