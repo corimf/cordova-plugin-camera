@@ -537,7 +537,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             throw new IllegalStateException();
         }
 
-        this.cleanup(FILE_URI, this.imageUri.getFilePath(), uri, bitmap);
+        this.cleanup(FILE_URI, this.imageUri.getFileUri(), uri, bitmap);
         bitmap = null;
     }
 
