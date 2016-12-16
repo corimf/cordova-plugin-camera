@@ -388,7 +388,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
           cropIntent.putExtra("aspectY", 1);
         }
         // create new file handle to get full resolution crop
-        croppedUri = Uri.fromFile(createCaptureFile(this.encodingType, System.currentTimeMillis() + ""));
+        croppedUri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
         cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         cropIntent.putExtra("output", croppedUri);
@@ -534,7 +534,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             throw new IllegalStateException();
         }
 
-        this.cleanup(FILE_URI, imageUri.getFilePath(), uri, bitmap);
+        this.cleanup(FILE_URI, this.imageUri.getFileUri(), uri, bitmap);
         bitmap = null;
     }
 
@@ -693,7 +693,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         int srcType = (requestCode / 16) - 1;
         int destType = (requestCode % 16) - 1;
         // if camera crop
-    if (requestCode == CROP_CAMERA) {
+    if (requestCode >= CROP_CAMERA) {
       if (resultCode == Activity.RESULT_OK) {
           // Because of the inability to pass through multiple intents, this hack will allow us
           // to pass arcane codes back.
