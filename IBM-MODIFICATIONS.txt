@@ -1,4 +1,23 @@
+FileUriExposed exception with Cordova camera plugin on Android N
+
+- Cordova RTC work item number: 113081
+- Apache Cordova Jira issue: 
+- Markmail or Google Group reference:
+- Product PMR: APAR PI73910 (RTC 113081)
+- Cherry-pick: 3d26986bfd5b7894ee16c6785f7996ef8c4b5c4f, 744d72a33bfb13b6c75e48385a9cec3435cbdd41,
+b62fdf50f7bd18ed5c4cb9ae72fb92908529fbfb, 00e0a7dc469133faf92b46f0d72112d4d873844e,
+f010394af8921052d565c4baf3ed40bd1170f9de, 3ed3d887ca7336534cfeb7d2146731f4e81a1203,
+61064ae3ed6c520e6de6646566b83772854d0fea, 84f96c10676af0fd7c472b076d038ba94fe1b73f,
+d9eb83bcb9a82b435adea38b873f937d4f07a1e5, 8b83171ee2762dbcad7b85dfa8dfead7d0650398
+- Full description: Android N introduced the FileUriExposed exception which occurs when an app 
+tries to access file:/// URIs outside of the scope of its own app. This is apparent in the 
+Cordova camera plugin when the device's camera app tries to pass the file URI of an image to 
+the Cordova app through the camera plugin, the Cordova app will crash with this exception.
+To solve this, Cordova implemented a custom URI to bypass this access restriction, so it won't 
+be handling file URIs, rather a custom URI. 
+
 Add Android M permission support to Cordova
+
 - Cordova RTC work item number: 106363
 - Apache Cordova Jira issue: 
 - Markmail or Google Group reference:
@@ -6,7 +25,7 @@ Add Android M permission support to Cordova
 - Cherry-pick: 8024c5de49888442992f8841740697ae151e1125, cbe17eec213c810695f257a93799a2fb88111def,
 44475d9df98f7e004a529f1e0d8851bf786788a7, 9b444c39ba398cbe2a59892ea980dd264d08eefd,
 1d32ea46f0ebcbf5cbc3d8a255170bf7186533c8, a19c75253a3deb317c670f2737755d7e05cc635f,
-c12206ebc8ec337613e0751970536d692de6f572, 0cd962466d2641fcd05155690e23432db02cc79a,
+c12206ebc8ec337613e0751970536d692de6f572, 0cd962466d2641fcd05155690e23432db02cc79a
 - Full description: The Android M permission model will request for permissions at 
 run time. To add this support, Cordova plugins will need to add permission request functions 
 in Android API 23 to handle the run time permissions.
